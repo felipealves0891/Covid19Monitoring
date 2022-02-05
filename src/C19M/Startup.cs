@@ -1,3 +1,6 @@
+using C19M.Infrastructure.Api;
+using C19M.Infrastructure.Cache;
+using C19M.Models.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -23,6 +26,8 @@ namespace C19M
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton(typeof(IRapidRepository), typeof(ApiRepository));
+            services.AddSingleton(typeof(IRedisRepository), typeof(CacheRepository));
             services.AddControllersWithViews();
         }
 

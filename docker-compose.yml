@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  web:
+    build: ./src/C19M/
+    ports:
+      - "9000:80"
+      - "9001:443"
+    links:
+      - redis
+  
+  redis:
+    image: redis
+    ports:
+      - "9002:6379"
+    
