@@ -1,16 +1,95 @@
-﻿@model IEnumerable<Country>
+﻿@model C19M.Helpers.Pagination.PaginatedList<Country>
 
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
+    string prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    string nextDisabled = !Model.HasNextPage ? "disabled" : "";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Welcome to C19M</h1>
+    <p>Monitoramento da covid 19.</p>
 </div>
 
-@foreach(var item in Model)
-{
-    @Html.Raw(item);
-    <br/>
-}
+<div class="table-rasponsive">
+
+    <form class="row" asp-action="Index" method="get">
+        <div class="col-2">
+            <select name="pageSize" class="form-control">
+                <option value="5">5 registros</option>
+                <option value="10">10 registros</option>
+                <option value="15">15 registros</option>
+                <option value="20">20 registros</option>
+                <option value="25">25 registros</option>
+                <option value="50">50 registros</option>
+            </select>
+        </div>
+        <div class="col-9">
+            <input type="text" class="form-control" placeholder="O que você procura?"
+                   name="searchText"/>
+        </div>
+        <div class="col-1">
+            <button class="btn btn-secondary" type="submit">Buscar</button>
+        </div>
+        <input type="hidden" name="pageNumber" value="@Model.PageIndex" />
+        <input type="hidden" name="sortOrder" value="@ViewData["sortOrder"]" />
+        <input type="hidden" name="sortField" value="@ViewData["sortField"]" />
+    </form>
+
+    <table class="table table-small table-striped table-borderless">
+        <thead>
+            <tr>
+                <th>
+                    <a asp-action="Index"
+                       asp-route-pageNumber="@Model.PageIndex"
+                       asp-route-pageSize="@ViewData["pageSize"]"
+                       asp-route-sortOrder="@ViewData["sortOrder"]"
+                       asp-route-searchText="@ViewData["searchText"]"
+                       asp-route-sortField="alpha2code"
+                       class="text-dark">
+                       Codigo
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="Index"
+                       asp-route-pageNumber="@Model.PageIndex"
+                       asp-route-pageSize="@ViewData["pageSize"]"
+                       asp-route-sortOrder="@ViewData["sortOrder"]"
+                       asp-route-searchText="@ViewData["searchText"]"
+                       asp-route-sortField="name"
+                       class="text-dark">
+                       Nome
+                    </a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(x => item.Alpha2Code)</td>
+                    <td>@Html.DisplayFor(x => item.Name)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <a asp-action="Index"
+        asp-route-pageNumber="@(Model.PageIndex - 1)"
+        asp-route-pageSize="@ViewData["pageSize"]"
+        class="btn btn-secondary @prevDisabled">
+        Anterior: @Html.Raw(Model.PageIndex - 1)
+    </a>
+
+    <a class="btn btn-primary text-white disabled">
+        Atual: @Html.Raw(Model.PageIndex)
+    </a>
+
+    <a asp-action="Index"
+        asp-route-pageNumber="@(Model.PageIndex + 1)"
+        asp-route-pageSize="@ViewData["pageSize"]"
+        class="btn btn-secondary @nextDisabled">
+        Proximo: @Html.Raw(Model.PageIndex + 1)
+    </a>
+    
+</div>

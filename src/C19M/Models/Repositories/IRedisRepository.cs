@@ -7,7 +7,7 @@ namespace C19M.Models.Repositories
 {
     public interface IRedisRepository
     {
-        public T Get<T>(string key);
+        public T Get<T>(string key, T @default);
 
         public void Set<T>(string key, T value);
 
